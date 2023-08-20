@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">세탁기</a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+          <li class="nav-item" style="padding:8px 5px;"></li>
+          <select class="form-select form-select-sm  align-self-center" aria-label=".form-select-lg example" style=" width: 80px; height: 30px; padding-right:10px;">
+            <option selected>Floor</option>
+            <option value="1">1층</option>
+            <option value="2">2층</option>
+            <option value="3">3층</option>
+            <option value="4">4층</option>
+          </select>
+          </li>
+
+          <li class="nav-item align-self-center" style="padding:8px 5px;">
+            <select class="form-select form-select-sm" aria-label=".form-select-lg example" style="width: 110px; height: 30px;">
+            <option selected>Direction</option>
+            <option value="1">방향1</option>
+            <option value="2">방향2</option>
+            <option value="3">방향3</option>
+            <option value="4">방향4</option>
+          </select>
+          </li>
+
+          <li class="nav-item align-self-center" style="padding:8px 5px;">
+          <a class="nav-link" href="/k_washing/">확인하기</a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+</nav>
+
+
+
+
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">사용자</th>
+        <th scope="col">시간</th>
+        <th scope="col">하고 싶은 말</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for k_washing in k_washing_list %}
+            <tr>
+                <th scope="row">{{ k_washing.pk }}</th>
+                <td>{{ k_washing.author }}</td>
+                <td>{{ k_washing.time }}</td>
+                <td>{{ k_washing.content }}</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr/>
+{% if request.user.is_authenticated %}
+    <a href="/k_washing/create/" type="button" class="btn btn-primary float-right">예약하기</a>
+{% else %}
+    <a href="/common/login/" type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#loginModal">예약하기</a>
+{% endif %}
+
+{% endblock %}

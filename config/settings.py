@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-
+    'crispy_bootstrap5',
     
     'k_washing',
 ]
@@ -136,3 +136,6 @@ LOGIN_REDIRECT_URL = '/k_washing/'
 
 # 로그아웃시 이동하는 URL
 LOGOUT_REDIRECT_URL = '/k_washing/'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
