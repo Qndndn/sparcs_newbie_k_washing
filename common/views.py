@@ -1,7 +1,9 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from common.forms import UserForm
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def signup(request):
     if request.method == "POST":
         form = UserForm(request.POST)
@@ -19,3 +21,18 @@ def signup(request):
     else:
         form = UserForm()
     return render(request, 'common/signup.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        #print(user)
+        #print(request)
+        if user is not None:
+            login(request, user)  # 세션 처리
+            return redirect('/k_washing/')  # 로그인 후 리다이렉션
+        else:
+            # 로그인 실패 처리
+            return render(request, 'common/login.html', {'error_message': '로그인 실패'})
+    return render(request, 'common/login.html')

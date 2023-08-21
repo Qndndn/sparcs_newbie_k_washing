@@ -18,9 +18,9 @@ class k_washingList(ListView):
             #print(form.is_bound)
             #print(form.errors)
             if form.is_valid():
-                print("is valid")
+                #print("is valid")
                 #form.save()
-                print(form.errors)
+                #print(form.errors)
                 floor_ = form.cleaned_data.get('floor')
                 direction_ = form.cleaned_data.get('direction')
                 #print(floor_)
@@ -59,12 +59,13 @@ class k_washingList(ListView):
 
 
                 if k_washing_list2:
-                    print(k_washing_list2[0])
+                    #print(k_washing_list2[0])
                     if self.request.user == k_washing_list2[0].author:
                         state = 1
                         if k_washing_list2[0].time<=0:
+                            print("빨래가 다 되었습니다.")
                             messages.warning(request, '빨래가 다 되었습니다.')
-                            print(k_washing_list2[0])
+                            #print(k_washing_list2[0])
 
                     hour = int(k_washing_list2[0].finish_time.split(':')[0])
                     minute= int(k_washing_list2[0].finish_time.split(':')[1])
@@ -88,7 +89,7 @@ class k_washingList(ListView):
                     }
                 )
             else:
-                print("15456fsd86a4f89asd4f6515sd4fa561sdf") 
+                #print("15456fsd86a4f89asd4f6515sd4fa561sdf") 
                 print(form.errors)
         else:
             form = k_washingForm()

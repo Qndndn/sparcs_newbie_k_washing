@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
-{% load webpush_notifications %}
 {% load crispy_forms_tags %}
 {% block content %}
 
@@ -13,7 +12,7 @@
       </a>
       <form class="collapse navbar-collapse" id="navbarSupportedContent" method="get" action="{% url 'k_washingList' %}">{% csrf_token %}
         <ul class="nav justify-content-center">
-          <li class="nav-item align-self-center" style="padding-right: 775px;">
+          <li class="nav-item align-self-center" style="padding-right: 705px;">
             {% if request.user.is_authenticated %}
               <a href="/k_washing/create/" type="button" class="btn btn-primary">예약하기</a>
             {% else %}
@@ -21,6 +20,10 @@
             {% endif %}
           </li>
           
+          <li class="nav-item align-self-center" style="padding:8px 5px;">
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">지도</button>
+          </li>
+
           <li class="nav-item align-self-center" style="padding:8px 5px;">
             <select class="form-select form-select-sm  align-self-center" name="floor" aria-label=".form-select-lg example" style="width: 80px; height: 30px; padding-right:10px;">
               <option selected>Floor</option>
@@ -66,7 +69,6 @@
     </div>
 {% endfor %}
 
-
 <table class="table">
   <thead class="thead-dark">
     <tr>
@@ -88,5 +90,19 @@
   {% endfor %}
   </tbody>
 </table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="float: right;"></button>
+        <img src="/static/map.png" width="100%"> 
+      </div>
+    </div>
+  </div>
+</div>
+
 
 {% endblock %}
