@@ -2,7 +2,6 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from common.forms import UserForm
 
-
 def signup(request):
     if request.method == "POST":
         form = UserForm(request.POST)
@@ -11,8 +10,12 @@ def signup(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)  # 사용자 인증
-            login(request, user)  # 로그인
-            return redirect('/k_washing/')
+            if user is not None:
+                login(request, user)  # 로그인
+                return redirect('/k_washing/')
+            else:
+                # Authentication failed, handle this case (e.g., show an error message)
+                form.add_error('username', 'Authentication failed. Please check your credentials.')
     else:
         form = UserForm()
     return render(request, 'common/signup.html', {'form': form})

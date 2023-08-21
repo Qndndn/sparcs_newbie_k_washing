@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-
 {% extends 'base.html' %}
+{% load webpush_notifications %}
 {% load crispy_forms_tags %}
 {% block content %}
-
-
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -22,6 +20,7 @@
               <a href="/common/login/" type="button" class="btn btn-primary">예약하기</a>
             {% endif %}
           </li>
+          
           <li class="nav-item align-self-center" style="padding:8px 5px;">
             <select class="form-select form-select-sm  align-self-center" name="floor" aria-label=".form-select-lg example" style="width: 80px; height: 30px; padding-right:10px;">
               <option selected>Floor</option>
@@ -57,25 +56,36 @@
 <hr/>
 <h6 style="font-weight: bold;">* 예상시각 | {{ time_ }} 부터 세탁가능합니다.</h6>
 <hr/>
+
+{% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert">
+        <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message | safe }}
+    </div>
+{% endfor %}
+
+
 <table class="table">
   <thead class="thead-dark">
     <tr>
       <th scope="col">#</th>
       <th scope="col">사용자</th>
-      <th scope="col">남은 세탁 시간</th>
+      <th scope="col">세탁시간</th>
       <th scope="col">하고 싶은 말</th>
     </tr>
   </thead>
   {% for k_washing in k_washing_list2 %}
     {% if forloop.first %} <tbody class="table-primary" style="font-weight: bold">
     {% else %} <tbody> {% endif %}
-            <tr>
-                <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ k_washing.author }}</td>
-                <td>{{ k_washing.time }}</td>
-                <td>{{ k_washing.content }}</td>
-            </tr>
-      {% endfor %}
+    <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ k_washing.author }}</td>
+        <td>{{ k_washing.time }}</td>
+        <td>{{ k_washing.content }}</td>
+    </tr>
+  {% endfor %}
   </tbody>
 </table>
 

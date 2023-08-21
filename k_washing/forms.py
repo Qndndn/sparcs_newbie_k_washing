@@ -5,7 +5,8 @@ from k_washing.models import k_washing
 class k_washingForm(forms.ModelForm):
     class Meta:
         model = k_washing
-        fields = ['floor','direction']
+        fields = ['direction', 'floor']
+    
         widgets = {
             "content": forms.Textarea(attrs={"class": "form-control mt-2", "rows": 20}),
         }
