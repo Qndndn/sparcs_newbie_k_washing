@@ -133,10 +133,10 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # 로그인 성공후 이동하는 URL
-LOGIN_REDIRECT_URL = '/k_washing/'
+LOGIN_REDIRECT_URL = '/'
 
 # 로그아웃시 이동하는 URL
-LOGOUT_REDIRECT_URL = '/k_washing/'
+LOGOUT_REDIRECT_URL = '/'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'

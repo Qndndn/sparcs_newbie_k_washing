@@ -14,7 +14,7 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)  # 사용자 인증
             if user is not None:
                 login(request, user)  # 로그인
-                return redirect('/k_washing/')
+                return redirect('/')
             else:
                 # Authentication failed, handle this case (e.g., show an error message)
                 form.add_error('username', 'Authentication failed. Please check your credentials.')
@@ -31,7 +31,7 @@ def login_view(request):
         #print(request)
         if user is not None:
             login(request, user)  # 세션 처리
-            return redirect('/k_washing/')  # 로그인 후 리다이렉션
+            return redirect('/')  # 로그인 후 리다이렉션
         else:
             # 로그인 실패 처리
             return render(request, 'common/login.html', {'error_message': '로그인 실패'})

@@ -120,4 +120,4 @@ class k_washingCreate(LoginRequiredMixin, CreateView):
 
             return response
         else:
-            return redirect('/k_washing/')
+            return redirect('/')

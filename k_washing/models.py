@@ -31,4 +31,4 @@ class k_washing(models.Model):
         return f'[{self.pk}] {self.author} :: {self.floor} :: {self.direction} :: {self.time} :: {self.content}'
     
     def get_absolute_url(self):
-        return f'/k_washing/'
+        return f'/'
