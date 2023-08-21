@@ -17,7 +17,8 @@ class k_washingList(ListView):
             #print(form.errors)
             if form.is_valid():
                 print("is valid")
-                # form.save()
+                #form.save()
+                print(form.errors)
                 floor_ = form.cleaned_data.get('floor')
                 direction_ = form.cleaned_data.get('direction')
                 #print(floor_)
@@ -25,20 +26,26 @@ class k_washingList(ListView):
                 k_washing_list2 = k_washing.objects.filter(floor = floor_, direction = direction_, )
                 now = datetime.now()
                 time1=0
-                for i in k_washing_list2:
-                    hour = int(i.finish_time.split(':')[0])
-                    minute= int(i.finish_time.split(':')[1])
-                    i.time = hour*60+minute-now.hour*60-now.minute
-                    time1+=i.time
+                time_=""
+                time_first=0
+                if k_washing_list2:
+                    for i in k_washing_list2:
+                        if i.finish_time:
+                            hour = int(i.finish_time.split(':')[0])
+                            minute= int(i.finish_time.split(':')[1])
+                            i.time = hour*60+minute-now.hour*60-now.minute
+                            time1+=i.time
+                            if i.time<0:
+                                i.delete()
+                        else: i.finish_time = str(now.hour)+":"+str(now.minute)
 
-                minute_=(now.minute+time1)%60
-                hour_=(now.hour+(time1+now.minute)//60)%24
-                time_=str(hour_)+":"+str(minute_)
+                    minute_=(now.minute+time1)%60
+                    hour_=(now.hour+(time1+now.minute)//60)%24
+                    time_=str(hour_)+":"+str(minute_)
 
                 #print("self.request.user: ")
                 #print(self.request.user)
                 #print(k_washing_list2[0].author)
-                time_first=0
                 if k_washing_list2:
                     if self.request.user == k_washing_list2[0].author:
                         state = 1
@@ -58,6 +65,9 @@ class k_washingList(ListView):
                         "time_first": time_first
                     }
                 )
+            else:
+                print("15456fsd86a4f89asd4f6515sd4fa561sdf") 
+                print(form.errors)
         else:
             form = k_washingForm()
         return render(request, 'k_washing/k_washing_list.html')
@@ -71,7 +81,7 @@ class k_washingCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         current_user = self.request.user
         if current_user.is_authenticated:
-
+            form.save()
             k_washing_list2 = k_washing.objects.filter(floor = form.instance.floor, direction = form.instance.direction, )
             time1=0
             for i in k_washing_list2:
