@@ -16,12 +16,18 @@ class k_washing(models.Model):
     time = models.IntegerField()
     moretime = IntegerRangeField(min_value=0, max_value=10, null=True)
     content = models.CharField(max_length=25, choices=( ("없음", "없음"), ("빨래가 끝난 후 바구니에 넣어주세요.", "빨래가 끝난 후 바구니에 넣어주세요."), ("세탁이 빨리 끝날 수 있습니다.", "세탁이 빨리 끝날 수 있습니다."), ("시간이 오래걸립니다.", "시간이 오래걸립니다."), ("향긋한 빨래 되세요:)", "향긋한 빨래 되세요:)"), ("K세탁 폼 미쳤다.", "K세탁 폼 미쳤다.")))
-    finish_time = models.CharField(null=True, max_length=100000)
+    finish_time = models.CharField(null=True, max_length=1000)
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    state = models.IntegerField()
 
     def __str__(self):
         return f'[{self.pk}] {self.author} :: {self.floor} :: {self.direction} :: {self.time} :: {self.content}'
     
     def get_absolute_url(self):
         return f'/k_washing/'
+    
+class k_washing_state(models.Model):
+    floor_1 = models.IntegerField(null=True)
+    direction_1 = models.IntegerField(null=True)
+    time_first = models.IntegerField(null=True)
+    state = models.IntegerField(null=True)
+    pk_1 = models.IntegerField(null=True)

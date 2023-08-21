@@ -5,7 +5,6 @@
 {% block content %}
 
 
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
@@ -51,9 +50,36 @@
 </nav>
 
 <br/>
-{% if state %} <h6 style="font-weight: bold;">* My 세탁 | {{ time_first }}분 후에 종료됩니다.</h6>
-{% else %} <h6 style="font-weight: bold;">* My 세탁 | 진행중인 세탁이 없습니다.</h6>
+{% if not k_washing_state_list %}<h6 style="font-weight: bold;">* My 세탁 | 현재 진행중인 세탁이 없습니다.</h6>
+{% else %}
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Floor</th>
+        <th scope="col">Direction</th>
+        <th scope="col">남은 시간</th>
+      </tr>
+    
+    {% for k_state in k_washing_state_list %}
+      {% if k_state.state %}
+        </thead>
+        {% if forloop.first %}
+          <tbody class="table-primary" style="font-weight: bold">
+        {% else %}
+          <tbody> {% endif %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ k_state.floor_1 }}</td>
+                <td>{{ k_state.directino_1 }}</td>
+                <td>{{ k_state.time_first }}분 후에 종료됩니다.</td>
+            </tr>
+          </tbody> {% endif %}
+    {% endfor %}
+  </table>
 {% endif %}
+
+
 <hr/>
 <h6 style="font-weight: bold;">* 예상시각 | {{ time_ }} 부터 세탁가능합니다.</h6>
 <hr/>
@@ -67,7 +93,18 @@
     </tr>
   </thead>
   {% for k_washing in k_washing_list2 %}
-    {% if forloop.first %} <tbody class="table-primary" style="font-weight: bold">
+    {% if forloop.first %}
+      <tbody class="table-primary" style="font-weight: bold">
+      {% if k_washing.time == 0 %}
+        <div class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">
+              세탁이 끝났습니다. 빨래를 가져가주세요.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        </div> 
+      {% endif %}
     {% else %} <tbody> {% endif %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
@@ -78,5 +115,17 @@
       {% endfor %}
   </tbody>
 </table>
+
+{% if messages and messages.tags == 'success'%}
+  <div class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        세탁이 끝났습니다. 빨래를 가져가주세요.
+        {{ message }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+{% endif %}
 
 {% endblock %}
