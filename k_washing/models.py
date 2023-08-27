@@ -20,7 +20,7 @@ class k_washing(models.Model):
         
     floor = models.CharField(max_length=5, choices=(("1", "1층"), ("2", "2층"), ("3", "3층"), ("4", "4층")))
     direction = models.CharField(max_length=5, choices=(("1", "방향1"), ("2", "방향2"), ("3", "방향3"), ("4", "방향4")))
-    time = models.IntegerField(default=0)
+    time = IntegerRangeField(min_value=0, max_value=1000, null=True)
     moretime = IntegerRangeField(min_value=0, max_value=10, null=True)
     content = models.CharField(max_length=25, choices=( ("없음", "없음"), ("빨래가 끝난 후 바구니에 넣어주세요.", "빨래가 끝난 후 바구니에 넣어주세요."), ("세탁이 빨리 끝날 수 있습니다.", "세탁이 빨리 끝날 수 있습니다."), ("시간이 오래걸립니다.", "시간이 오래걸립니다."), ("향긋한 빨래 되세요:)", "향긋한 빨래 되세요:)"), ("K세탁 폼 미쳤다.", "K세탁 폼 미쳤다.")))
     finish_time = models.CharField(null=True, max_length=100000)
