@@ -7,6 +7,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+import json
 
 # Create your views here.
 class k_washingList(ListView):
@@ -56,22 +57,40 @@ class k_washingList(ListView):
                 #print(self.request.user)
                 #print(k_washing_list2[0].author)
                 state = 0
+                print("k_washing_list2")
+                print(k_washing_list2)
                 if k_washing_list2:
-                    #print(k_washing_list2[0])
+                    print("-------------------")
+                    print("time")
+                    print(k_washing_list2[0].time)
+
                     if self.request.user == k_washing_list2[0].author:
                         state = 1
                     hour = int(k_washing_list2[0].finish_time.split(':')[0])
                     minute= int(k_washing_list2[0].finish_time.split(':')[1])
                     k_washing_list2[0].time = hour*60+minute-now.hour*60-now.minute
+                    time_first = k_washing_list2[0].time
 
                     if k_washing_list2[0].time <= 0:
                         messages.warning(request, '빨래가 다 되었습니다.')
+                        if len(k_washing_list2)>1:
+                            hour__ = int(k_washing_list2[1].finish_time.split(':')[0])
+                            minute__= int(k_washing_list2[1].finish_time.split(':')[1])
+                            time__1 = minute+hour*60 - k_washing_list2[0].time
+                            minute__ = time__1 % 60
+                            hour__ = time__1 // 60
+                            k_washing_list2[1].finish_time = str(hour__) + ":" + str(minute__)
                         k_washing_list2[0].delete()
-                    time_first = k_washing_list2[0].time
-                    pk_1 = k_washing_list2[0].pk
+
+                    if k_washing_list2[0]: pk_1 = k_washing_list2[0].pk
+                    else: pk_1 = 0
                 else:
                     pk_1 = 0
 
+                print("pk_1: ")
+                print(pk_1)
+                print("k_washing_list2")
+                print(k_washing_list2)
                 return render(
                     request,
                     'k_washing/k_washing_list.html',
@@ -100,7 +119,13 @@ def k_washing_list_delete(request, pk_1):
     print("삭제버튼 눌려짐")
     print("pk_1: ")
     print(pk_1)
+    k_washing_list2_json = request.POST.get('k_washing_list2')
+    k_washing_list2 = json.loads(k_washing_list2_json)
     try:
+        # k_washing_list2_json 문자열을 파싱하여 JSON 객체로 변환
+        k_washing_list2 = json.loads(k_washing_list2_json)
+        print("k_washing_list2")
+        print(k_washing_list2)
         k_washing_a = get_object_or_404(k_washing, pk=pk_1)
         print("해치웠나")
         if request.user != k_washing_a.author:
@@ -109,8 +134,21 @@ def k_washing_list_delete(request, pk_1):
             messages.error(request, '현재 진행중인 세탁이 없습니다.')
             return redirect('/')
         print("뭐임 ?")
+        print("k_washing_list_delete 함수의 k_washing_list2")
+        print(k_washing_list2)
+        print("==========================================")
+        print("아아아아아ㅏ아아아아ㅏ")
+        if len(k_washing_list2) > 1:
+            hour = int(k_washing_list2[1].finish_time.split(':')[0])
+            minute= int(k_washing_list2[1].finish_time.split(':')[1])
+            time__1 = minute+hour*60 - k_washing_list2[0].time
+            minute = time__1 % 60
+            hour = time__1 // 60
+            k_washing_list2[1].finish_time = str(hour) + ":" + str(minute)
+        print("==========================================")
         k_washing_a.delete()
-        
+        print("k_washing_list_delete 함수의 삭제후 k_washing_list2")
+        print(k_washing_list2)
         # 삭제 후 현재 페이지에 머물도록 JSON 응답 반환
         if request.is_ajax():
             return JsonResponse({'deleted': True})

@@ -66,12 +66,14 @@
         {% endif %}
       </td>
       <th scope="col" class="align-middle">
-        <form method="post" action="{% url 'k_washing:k_washing_list_delete' pk_1 %}">
+        <form method="post" action="{% url 'k_washing:k_washing_list_delete' k_washing_list2 %}">
           {% csrf_token %}
+          <!-- <input type="hidden" name="k_washing_list2" id="k_washing_list2_data" data-k_washing_list2="{{ k_washing_list2_json|safe }}"> -->
           {% if pk_1 and state%}
-            <button type="submit" class="btn btn-secondary">세탁종료</button>
+            <button id="saetakend_btn" type="submit" class="btn btn-secondary">세탁종료</button>
+            <!-- <button id="saetakend_btn" type="submit" class="btn btn-secondary" onclick="saetakend()">세탁종료</button> -->
           {% endif %}  
-          </form>
+        </form>
       </th>
     </tr>
   </tbody>
@@ -127,7 +129,12 @@
 {% block script %}
 <script type="text/javascript">
   console.log("자바스크립트 실행");
+  // 데이터 속성을 통해 k_washing_list2 데이터를 가져옴
+  const k_washing_list2_data = document.getElementById("k_washing_list2_data");
+  const k_washing_list2_json = k_washing_list2_data.dataset.k_washing_list2;
+
   const deleteButtons = document.getElementsByClassName("delete");
+  
   Array.from(deleteButtons).forEach(function(button) {
     button.addEventListener('click', function() {
       if (confirm("정말로 삭제하시겠습니까?")) {
@@ -141,7 +148,18 @@
         csrfInput.name = "csrfmiddlewaretoken";
         csrfInput.value = csrfToken.value;
         form.appendChild(csrfInput);
+
+        // k_washing_list2 데이터를 FormData에 추가
+        const k_washing_list2_input = document.createElement("input");
+        k_washing_list2_input.type = "hidden";
+        k_washing_list2_input.name = "k_washing_list2";
+        k_washing_list2_input.value = k_washing_list2_json;
+        form.appendChild(k_washing_list2_input);
+
         document.body.appendChild(form);
+
+        console.log("-----------------")
+        console.log(k_washing_list2_json)
         
         // Ajax 요청으로 세탁 데이터 삭제 후 현재 페이지 새로고침
         fetch(form.action, {
@@ -157,6 +175,13 @@
       }
     });
   });
+
+
+
+  // function saetakend() {
+  //   var btn = document.getElementById("saetakend_btn");
+  //   console.log("content : " k_washing_list2)
+  // }
 </script>
 {% endblock %}
 

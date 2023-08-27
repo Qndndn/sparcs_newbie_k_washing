@@ -28,7 +28,7 @@ class k_washing(models.Model):
     state = models.IntegerField(choices=STATE_CHOICES, default=0)
 
     def __str__(self):
-        return f'[{self.pk}] {self.author} :: {self.floor} :: {self.direction} :: {self.time} :: {self.content}'
+        return f'[{self.pk}] {self.author} :: {self.floor} :: {self.direction} :: {self.time} :: {self.content} :: {self.finish_time}'
     
     def get_absolute_url(self):
         return f'/'
