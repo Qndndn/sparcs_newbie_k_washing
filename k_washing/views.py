@@ -130,7 +130,8 @@ def k_washing_list_delete(request, pk_1, pk_2):
     print("***********************")
     print("pk_2: ")
     print(pk_2)
-
+    k_washing_a = None
+    k_washing_b = None
     try:
         k_washing_a = get_object_or_404(k_washing, pk=pk_1)
         k_washing_b = get_object_or_404(k_washing, pk=pk_2)
@@ -159,6 +160,9 @@ def k_washing_list_delete(request, pk_1, pk_2):
             return JsonResponse({'deleted': True})
         return redirect('/')  # 혹은 적절한 리다이렉션 URL로 변경
     except:
+        # k_washing_b 객체가 없는 경우에는 k_washing_a 객체만 삭제
+        if k_washing_a:
+            k_washing_a.delete()
         return redirect('/')
 
 
