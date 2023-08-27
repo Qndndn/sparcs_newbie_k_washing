@@ -82,10 +82,17 @@ class k_washingList(ListView):
                             k_washing_list2[1].finish_time = str(hour__) + ":" + str(minute__)
                         k_washing_list2[0].delete()
 
-                    if k_washing_list2[0]: pk_1 = k_washing_list2[0].pk
-                    else: pk_1 = 0
+                    if k_washing_list2[0]:
+                        pk_1 = k_washing_list2[0].pk
+                        if len(k_washing_list2)>1:
+                            pk_2=k_washing_list2[1].pk
+                        else: pk_2=0
+                    else:
+                        pk_1 = 0
+                        pk_2=0
                 else:
                     pk_1 = 0
+                    pk_2=0
 
                 print("pk_1: ")
                 print(pk_1)
@@ -101,7 +108,8 @@ class k_washingList(ListView):
                         "time_": time_,
                         "state": state,
                         "time_first": time_first,
-                        "pk_1": pk_1
+                        "pk_1": pk_1,
+                        "pk_2": pk_2,
                     }
                 )
             else:
@@ -115,18 +123,19 @@ class k_washingList(ListView):
 from django.http import JsonResponse
 
 @login_required(login_url='common:login')
-def k_washing_list_delete(request, pk_1):
+def k_washing_list_delete(request, pk_1, pk_2):
     print("삭제버튼 눌려짐")
     print("pk_1: ")
     print(pk_1)
-    k_washing_list2_json = request.POST.get('k_washing_list2')
-    k_washing_list2 = json.loads(k_washing_list2_json)
+    print("***********************")
+    print("pk_2: ")
+    print(pk_2)
+
     try:
-        # k_washing_list2_json 문자열을 파싱하여 JSON 객체로 변환
-        k_washing_list2 = json.loads(k_washing_list2_json)
-        print("k_washing_list2")
-        print(k_washing_list2)
         k_washing_a = get_object_or_404(k_washing, pk=pk_1)
+        k_washing_b = get_object_or_404(k_washing, pk=pk_2)
+        k_washing_a.id = pk_1
+        k_washing_b.id = pk_2
         print("해치웠나")
         if request.user != k_washing_a.author:
             print(request.user)
@@ -134,28 +143,23 @@ def k_washing_list_delete(request, pk_1):
             messages.error(request, '현재 진행중인 세탁이 없습니다.')
             return redirect('/')
         print("뭐임 ?")
-        print("k_washing_list_delete 함수의 k_washing_list2")
-        print(k_washing_list2)
         print("==========================================")
         print("아아아아아ㅏ아아아아ㅏ")
-        if len(k_washing_list2) > 1:
-            hour = int(k_washing_list2[1].finish_time.split(':')[0])
-            minute= int(k_washing_list2[1].finish_time.split(':')[1])
-            time__1 = minute+hour*60 - k_washing_list2[0].time
+        if k_washing_b:
+            hour = int(k_washing_b.finish_time.split(':')[0])
+            minute= int(k_washing_b.finish_time.split(':')[1])
+            time__1 = minute+hour*60 - k_washing_a.time
             minute = time__1 % 60
             hour = time__1 // 60
-            k_washing_list2[1].finish_time = str(hour) + ":" + str(minute)
+            k_washing_b.finish_time = str(hour) + ":" + str(minute)
         print("==========================================")
         k_washing_a.delete()
-        print("k_washing_list_delete 함수의 삭제후 k_washing_list2")
-        print(k_washing_list2)
         # 삭제 후 현재 페이지에 머물도록 JSON 응답 반환
         if request.is_ajax():
             return JsonResponse({'deleted': True})
-        return redirect('k_washingList')  # 혹은 적절한 리다이렉션 URL로 변경
-    except: 
+        return redirect('/')  # 혹은 적절한 리다이렉션 URL로 변경
+    except:
         return redirect('/')
-
 
 
 
