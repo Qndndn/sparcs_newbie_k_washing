@@ -135,8 +135,8 @@ def k_washing_list_delete(request, pk_1, pk_2):
     try:
         k_washing_a = get_object_or_404(k_washing, pk=pk_1)
         k_washing_b = get_object_or_404(k_washing, pk=pk_2)
-        k_washing_a.id = pk_1
-        k_washing_b.id = pk_2
+
+
         print("해치웠나")
         if request.user != k_washing_a.author:
             print(request.user)
@@ -154,7 +154,7 @@ def k_washing_list_delete(request, pk_1, pk_2):
             hour = time__1 // 60
             k_washing_b.finish_time = str(hour) + ":" + str(minute)
         print("==========================================")
-        k_washing_a.delete()
+        if k_washing_a: k_washing.objects.filter(pk=pk_1).delete()
         # 삭제 후 현재 페이지에 머물도록 JSON 응답 반환
         if request.is_ajax():
             return JsonResponse({'deleted': True})
@@ -162,7 +162,7 @@ def k_washing_list_delete(request, pk_1, pk_2):
     except:
         # k_washing_b 객체가 없는 경우에는 k_washing_a 객체만 삭제
         if k_washing_a:
-            k_washing_a.delete()
+            k_washing.objects.filter(pk=pk_1).delete()
         return redirect('/')
 
 
