@@ -38,9 +38,40 @@ class k_washingList(ListView):
                 state=0
                 time_=""
                 time_first=0
+
+                time_past=0
+                hour_past=0
+                minute_past=0
+
+                n=0
+
                 if k_washing_list2:
                     for i in k_washing_list2:
-                        if i.finish_time:
+                        if n == 0:
+                            minute_past = int(i.finish_time.split(':')[1])
+                            hour_past = int(i.finish_time.split(':')[0])
+                            time_past = i.time
+                            print('첫 time_:')
+                            print(time_)
+                            n=1
+                        elif i.finish_time:
+                            minute_=(minute_past+time_past)%60
+                            hour_=(hour_past+(minute_past+time_past)//60)%24
+                            time_=str(hour_)+":"+str(minute_)
+
+                            print('time_:')
+                            print(time_)
+
+                            
+                            if time_ != i.finish_time:
+                                print("i.finish_time")
+                                print(i.finish_time)
+                                i.finish_time = time_
+                                minute_past = int(i.finish_time.split(':')[1])
+                                hour_past = int(i.finish_time.split(':')[0])
+                                time_past = i.time
+                                i.save()
+                                              
                             print("i.finish_time")
                             print(i.finish_time)
                         else: i.finish_time = str(now.hour)+":"+str(now.minute)
@@ -130,6 +161,11 @@ def k_washing_list_delete(request, pk_1, pk_2):
     print("***********************")
     print("pk_2: ")
     print(pk_2)
+
+    if pk_1 is None:
+        redirect('/')
+    
+
     k_washing_a = None
     k_washing_b = None
     try:
@@ -153,6 +189,9 @@ def k_washing_list_delete(request, pk_1, pk_2):
             minute = time__1 % 60
             hour = time__1 // 60
             k_washing_b.finish_time = str(hour) + ":" + str(minute)
+            k_washing_b.save()
+            print( "k_washing_b.finish_time")
+            print( k_washing_b.finish_time)
         print("==========================================")
         if k_washing_a: k_washing.objects.filter(pk=pk_1).delete()
         # 삭제 후 현재 페이지에 머물도록 JSON 응답 반환
